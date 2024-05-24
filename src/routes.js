@@ -46,6 +46,12 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import FirstPage from "layouts/authentication/first-page";
 import Agent from "layouts/completeprofile/Agent";
+import Client from "layouts/completeprofile/Client";
+import QuizAgent from "layouts/authentication/quizAgent";
+import ClientSignup from "layouts/authentication/client-signup";
+import ClientSignin from "layouts/authentication/client-signiin";
+import AgentDashboard from "layouts/agentdashboard";
+import AgentOrder from "layouts/agentOrder";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -60,7 +66,15 @@ const routes = [
     component: <Dashboard />,
   },
   {
-    type: "collapse",
+    type: "",
+    name: "Agent Dashboard",
+    key: "agentdashboard",
+    icon: <Icon fontSize="small">agentdashboard</Icon>,
+    route: "/agent-dashboard",
+    component: <AgentDashboard />,
+  },
+  {
+    type: "",
     name: "Tables",
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
@@ -68,7 +82,7 @@ const routes = [
     component: <Tables />,
   },
   {
-    type: "collapse",
+    type: "",
     name: "Billing",
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -76,7 +90,7 @@ const routes = [
     component: <Billing />,
   },
   {
-    type: "collapse",
+    type: "",
     name: "RTL",
     key: "rtl",
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
@@ -84,12 +98,20 @@ const routes = [
     component: <RTL />,
   },
   {
-    type: "collapse",
+    type: "",
     name: "Notifications",
     key: "notifications",
     icon: <Icon fontSize="small">notifications</Icon>,
     route: "/notifications",
     component: <Notifications />,
+  },
+  {
+    type: "",
+    name: "AgentOrder",
+    key: "agentorder",
+    icon: <Icon fontSize="small">agentorder</Icon>,
+    route: "/agentOrder",
+    component: <AgentOrder />,
   },
   {
     type: "collapse",
@@ -100,7 +122,7 @@ const routes = [
     component: <Profile />,
   },
   {
-    type: "collapse",
+    type: "",
     name: "Sign In",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
@@ -108,7 +130,7 @@ const routes = [
     component: <SignIn />,
   },
   {
-    type: "collapse",
+    type: "",
     name: "First page",
     key: "first-page",
     icon: <Icon fontSize="small">first_page</Icon>,
@@ -116,7 +138,7 @@ const routes = [
     component: <FirstPage />,
   },
   {
-    type: "collapse",
+    type: "",
     name: "Agent",
     key: "agent",
     icon: <Icon fontSize="small">agent</Icon>,
@@ -124,12 +146,44 @@ const routes = [
     component: <Agent />,
   },
   {
-    type: "collapse",
+    type: "",
+    name: "QuizAgent",
+    key: "quizagent",
+    icon: <Icon fontSize="small">quizAgent</Icon>,
+    route: "/authentication/quizAgent",
+    component: <QuizAgent />,
+  },
+  {
+    type: "",
+    name: "Client",
+    key: "client",
+    icon: <Icon fontSize="small">client</Icon>,
+    route: "/completeprofile/Client",
+    component: <Client />,
+  },
+  {
+    type: "",
     name: "Sign Up",
     key: "sign-up",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    type: "",
+    name: "Client Sign Up",
+    key: "client-signup",
+    icon: <Icon fontSize="small">ClientSignup</Icon>,
+    route: "/authentication/client-signup",
+    component: <ClientSignup />,
+  },
+  {
+    type: "",
+    name: "Client Sign In",
+    key: "client-signin",
+    icon: <Icon fontSize="small">ClientSignin</Icon>,
+    route: "/authentication/client-signiin",
+    component: <ClientSignin />,
   },
 ];
 

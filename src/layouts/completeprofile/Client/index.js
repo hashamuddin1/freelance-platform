@@ -19,7 +19,7 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
-function Agent() {
+function Client() {
   return (
     <CoverLayout image={bgImage}>
       <Card>
@@ -44,39 +44,24 @@ function Agent() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="text" label="Experience" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
               <MDInput type="text" label="Description" variant="standard" fullWidth />
             </MDBox>
             <MDBox mb={2}>
               <MDInput type="text" label="Phone Number" variant="standard" fullWidth />
             </MDBox>
-            <MDBox mb={2}>
-              <h6>Select Your Skills</h6>
-              <FormGroup>
-                <FormControlLabel control={<Checkbox />} label="Facebook Ads" />
-                <FormControlLabel control={<Checkbox />} label="Instagram Ads" />
-                <FormControlLabel control={<Checkbox />} label="Google Ads" />
-                <FormControlLabel control={<Checkbox />} label="Email Marketing" />
-                <FormControlLabel control={<Checkbox />} label="Content Writing" />
-                <FormControlLabel control={<Checkbox />} label="SEO" />
-              </FormGroup>
-            </MDBox>
-
-            <MDBox mt={4} mb={1}>
-              <MDTypography
-                component={Link}
-                to="/authentication/quizAgent"
-                variant="button"
-                color="info"
-                fontWeight="medium"
-              >
+            <MDTypography
+              component={Link}
+              to="/dashboard"
+              variant="button"
+              color="white"
+              fontWeight="medium"
+            >
+              <MDBox mt={4} mb={1}>
                 <MDButton variant="gradient" color="info" fullWidth>
                   Create Profile
                 </MDButton>
-              </MDTypography>
-            </MDBox>
+              </MDBox>
+            </MDTypography>
           </MDBox>
         </MDBox>
       </Card>
@@ -84,4 +69,4 @@ function Agent() {
   );
 }
 
-export default Agent;
+export default Client;

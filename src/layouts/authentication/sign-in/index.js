@@ -62,9 +62,17 @@ function Basic() {
             </MDBox>
 
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                sign in
-              </MDButton>
+              <MDTypography
+                component={Link}
+                to="/completeprofile/Agent"
+                variant="button"
+                color="white"
+                fontWeight="medium"
+              >
+                <MDButton variant="gradient" color="info" fullWidth>
+                  sign in
+                </MDButton>
+              </MDTypography>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">

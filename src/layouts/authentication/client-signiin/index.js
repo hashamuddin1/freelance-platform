@@ -1,3 +1,20 @@
+/**
+=========================================================
+* Material Dashboard 2 React - v2.2.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard-react
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
+
+import { useState } from "react";
+
 // react-router-dom components
 import { Link } from "react-router-dom";
 
@@ -32,35 +49,44 @@ function Basic() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Select the Account
+            Sign in
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
-            <MDBox mt={4} mb={1}>
-              <MDTypography
-                component={Link}
-                to="/authentication/sign-up"
-                variant="button"
-                color="white"
-                fontWeight="medium"
-              >
-                <MDButton mb={5} variant="gradient" color="info" fullWidth>
-                  Agent
-                </MDButton>
-              </MDTypography>
+            <MDBox mb={2}>
+              <MDInput type="email" label="Email" fullWidth />
             </MDBox>
+            <MDBox mb={2}>
+              <MDInput type="password" label="Password" fullWidth />
+            </MDBox>
+
             <MDBox mt={4} mb={1}>
               <MDTypography
                 component={Link}
-                to="/authentication/client-signup"
+                to="/completeprofile/Client"
                 variant="button"
                 color="white"
                 fontWeight="medium"
               >
                 <MDButton variant="gradient" color="info" fullWidth>
-                  Client
+                  sign in
                 </MDButton>
+              </MDTypography>
+            </MDBox>
+            <MDBox mt={3} mb={1} textAlign="center">
+              <MDTypography variant="button" color="text">
+                Don&apos;t have an account?{" "}
+                <MDTypography
+                  component={Link}
+                  to="/authentication/client-signup"
+                  variant="button"
+                  color="info"
+                  fontWeight="medium"
+                  textGradient
+                >
+                  Sign up
+                </MDTypography>
               </MDTypography>
             </MDBox>
           </MDBox>
