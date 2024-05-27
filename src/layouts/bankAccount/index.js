@@ -16,6 +16,22 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import MDTypography from "components/MDTypography";
 import { Link } from "react-router-dom";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 const pages = [
   { page: "Profile", link: "agent-dashboard" },
   { page: "Orders", link: "agentOrder" },
@@ -43,12 +59,6 @@ const columns = [
     width: 110,
     editable: true,
   },
-  {
-    field: "status",
-    headerName: "Status",
-    width: 110,
-    editable: true,
-  },
 ];
 
 const rows = [
@@ -59,7 +69,6 @@ const rows = [
     ClientName: "Cersei",
     price: 31,
     date: "2023-04-23",
-    status: "Complete",
   },
   {
     id: 3,
@@ -67,7 +76,6 @@ const rows = [
     ClientName: "Jaime",
     price: 31,
     date: "2024-07-23",
-    status: "Complete",
   },
   {
     id: 4,
@@ -75,7 +83,6 @@ const rows = [
     ClientName: "Arya",
     price: 11,
     date: "2024-05-26",
-    status: "Complete",
   },
   {
     id: 5,
@@ -83,7 +90,6 @@ const rows = [
     ClientName: "Daenerys",
     price: 55,
     date: "2024-05-20",
-    status: "Complete",
   },
   {
     id: 6,
@@ -91,7 +97,6 @@ const rows = [
     ClientName: null,
     price: 150,
     date: "2022-05-23",
-    status: "Complete",
   },
   {
     id: 7,
@@ -99,7 +104,6 @@ const rows = [
     ClientName: "Ferrara",
     price: 44,
     date: "2024-05-23",
-    status: "Complete",
   },
   {
     id: 8,
@@ -107,7 +111,6 @@ const rows = [
     ClientName: "Rossini",
     price: 36,
     date: "2024-05-23",
-    status: "Complete",
   },
   {
     id: 9,
@@ -115,10 +118,12 @@ const rows = [
     ClientName: "Harvey",
     price: 65,
     date: "2024-05-23",
-    status: "Complete",
   },
 ];
-export default function AgentOrder() {
+export default function BankAccount() {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -179,7 +184,6 @@ export default function AgentOrder() {
                       >
                         {page.page}
                       </MDTypography>
-                      {/* <Typography textAlign="center">{page.page}</Typography> */}
                     </MenuItem>
                   ))}
                 </Menu>
@@ -233,17 +237,13 @@ export default function AgentOrder() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
-                title="Pending Orders"
+                title="Total Earning"
                 count={281}
               />
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard icon="leaderboard" title="Completed Orders" count="2,300" />
-            </MDBox>
-          </Grid>
         </Grid>
+        <Button onClick={handleOpen}>ADD BANK ACCOUNT</Button>
         <Box sx={{ height: 400, width: "100%" }}>
           <DataGrid
             rows={rows}
@@ -260,6 +260,41 @@ export default function AgentOrder() {
             disableRowSelectionOnClick
           />
         </Box>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Add Bank Account Detail
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <TextField
+                style={{ marginBottom: 10 }}
+                id="outlined-basic"
+                label="Bank Name"
+                variant="outlined"
+              />
+              <TextField
+                style={{ marginBottom: 10 }}
+                id="outlined-basic"
+                label="Account Number"
+                variant="outlined"
+              />
+              <TextField
+                style={{ marginBottom: 10 }}
+                id="outlined-basic"
+                label="Branch Name"
+                variant="outlined"
+              />
+            </Typography>
+            <Button variant="contained" style={{ color: "white" }}>
+              Save
+            </Button>
+          </Box>
+        </Modal>
       </DashboardLayout>
     </>
   );

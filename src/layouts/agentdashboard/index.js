@@ -1,5 +1,6 @@
 // @mui material components
 import Grid from "@mui/material/Grid";
+import { Link } from "react-router-dom";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -23,13 +24,17 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
+import MDTypography from "components/MDTypography";
 
 //getprofile
 import TextField from "@mui/material/TextField";
 
-const pages = ["Profile", "Orders", "Cards"];
+const pages = [
+  { page: "Profile", link: "agent-dashboard" },
+  { page: "Orders", link: "agentOrder" },
+  { page: "Bank Account", link: "BankAccount" },
+];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Dashboard() {
@@ -84,21 +89,34 @@ function Dashboard() {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
+                  <MenuItem key={page.page} onClick={handleCloseNavMenu}>
+                    <MDTypography
+                      component={Link}
+                      to={`/${page.link}`}
+                      variant="button"
+                      color="white"
+                      fontWeight="medium"
+                    >
+                      {page.page}
+                    </MDTypography>
+                    {/* <Typography textAlign="center">{page.page}</Typography> */}
                   </MenuItem>
                 ))}
               </Menu>
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                <MDTypography
+                  component={Link}
+                  to={`/${page.link}`}
+                  variant="button"
+                  color="black"
+                  key={page.page}
+                  fontWeight="medium"
+                  sx={{ marginRight: 5 }}
                 >
-                  {page}
-                </Button>
+                  {page.page}
+                </MDTypography>
               ))}
             </Box>
 
@@ -173,6 +191,15 @@ function Dashboard() {
               id="outlined-read-only-input"
               label="Password"
               defaultValue="12345"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField
+              style={{ marginRight: 10 }}
+              id="outlined-read-only-input"
+              label="Account"
+              defaultValue="Agent"
               InputProps={{
                 readOnly: true,
               }}
