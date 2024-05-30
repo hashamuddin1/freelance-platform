@@ -99,7 +99,6 @@ function Dashboard() {
                     >
                       {page.page}
                     </MDTypography>
-                    {/* <Typography textAlign="center">{page.page}</Typography> */}
                   </MenuItem>
                 ))}
               </Menu>

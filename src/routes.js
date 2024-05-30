@@ -15,6 +15,8 @@ import ClientSignin from "layouts/authentication/client-signiin";
 import AgentDashboard from "layouts/agentdashboard";
 import AgentOrder from "layouts/agentOrder";
 import BankAccount from "layouts/bankAccount";
+import ClientOrder from "layouts/clientOrder";
+import ClientCard from "layouts/clientCard";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -83,6 +85,22 @@ const routes = [
     icon: <Icon fontSize="small">bankAccount</Icon>,
     route: "/bankAccount",
     component: <BankAccount />,
+  },
+  {
+    type: "",
+    name: "ClientCard",
+    key: "ClientCard",
+    icon: <Icon fontSize="small">ClientCard</Icon>,
+    route: "/ClientCard",
+    component: <ClientCard />,
+  },
+  {
+    type: "",
+    name: "ClientOrder",
+    key: "ClientOrder",
+    icon: <Icon fontSize="small">ClientOrder</Icon>,
+    route: "/clientOrder",
+    component: <ClientOrder />,
   },
   {
     type: "collapse",

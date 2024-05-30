@@ -1,20 +1,6 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Grid from "@mui/material/Grid";
+import { Link } from "react-router-dom";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -44,14 +30,103 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import MDTypography from "components/MDTypography";
 
-const pages = ["Products", "Pricing", "Blog"];
+//datagrid
+import { DataGrid } from "@mui/x-data-grid";
+
+//getprofile
+import TextField from "@mui/material/TextField";
+
+const pages = [
+  { page: "Home", link: "dashboard" },
+  { page: "Orders", link: "clientOrder" },
+  { page: "Card", link: "ClientCard" },
+];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
+const columns = [
+  { field: "id", headerName: "ID", width: 90 },
+  {
+    field: "ClientName",
+    headerName: "Client Name",
+    width: 150,
+    editable: true,
+  },
+  {
+    field: "price",
+    headerName: "Price",
+    width: 150,
+    editable: true,
+  },
+  {
+    field: "date",
+    headerName: "Date",
+    width: 110,
+    editable: true,
+  },
+];
+
+const rows = [
+  { id: 1, lastName: "Snow", ClientName: "Jon", price: 14, date: "2024-05-23", status: "Complete" },
+  {
+    id: 2,
+    lastName: "Lannister",
+    ClientName: "Cersei",
+    price: 31,
+    date: "2023-04-23",
+  },
+  {
+    id: 3,
+    lastName: "Lannister",
+    ClientName: "Jaime",
+    price: 31,
+    date: "2024-07-23",
+  },
+  {
+    id: 4,
+    lastName: "Stark",
+    ClientName: "Arya",
+    price: 11,
+    date: "2024-05-26",
+  },
+  {
+    id: 5,
+    lastName: "Targaryen",
+    ClientName: "Daenerys",
+    price: 55,
+    date: "2024-05-20",
+  },
+  {
+    id: 6,
+    lastName: "Melisandre",
+    ClientName: null,
+    price: 150,
+    date: "2022-05-23",
+  },
+  {
+    id: 7,
+    lastName: "Clifford",
+    ClientName: "Ferrara",
+    price: 44,
+    date: "2024-05-23",
+  },
+  {
+    id: 8,
+    lastName: "Frances",
+    ClientName: "Rossini",
+    price: 36,
+    date: "2024-05-23",
+  },
+  {
+    id: 9,
+    lastName: "Roxie",
+    ClientName: "Harvey",
+    price: 65,
+    date: "2024-05-23",
+  },
+];
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
@@ -76,7 +151,6 @@ function Dashboard() {
 
   return (
     <DashboardLayout>
-      {/* <DashboardNavbar /> */}
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -110,21 +184,33 @@ function Dashboard() {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
+                  <MenuItem key={page.page} onClick={handleCloseNavMenu}>
+                    <MDTypography
+                      component={Link}
+                      to={`/${page.link}`}
+                      variant="button"
+                      color="white"
+                      fontWeight="medium"
+                    >
+                      {page.page}
+                    </MDTypography>
                   </MenuItem>
                 ))}
               </Menu>
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                <MDTypography
+                  component={Link}
+                  to={`/${page.link}`}
+                  variant="button"
+                  color="black"
+                  key={page.page}
+                  fontWeight="medium"
+                  sx={{ marginRight: 5 }}
                 >
-                  {page}
-                </Button>
+                  {page.page}
+                </MDTypography>
               ))}
             </Box>
 
@@ -159,31 +245,12 @@ function Dashboard() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
-              />
+              <ComplexStatisticsCard color="dark" icon="weekend" title="Total Orders" count={281} />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
-                percentage={{
-                  color: "success",
-                  amount: "+3%",
-                  label: "than last month",
-                }}
-              />
+              <ComplexStatisticsCard icon="leaderboard" title="Pending Orders" count="2,300" />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
@@ -191,85 +258,71 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="success"
                 icon="store"
-                title="Revenue"
+                title="Completed Order"
                 count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
               />
             </MDBox>
           </Grid>
         </Grid>
-        <MDBox mt={4.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
-              </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
-            </Grid>
-          </Grid>
-        </MDBox>
       </MDBox>
-      <Footer />
+      <MDBox mt={4.5}></MDBox>
+      <MDBox>
+        <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            style={{ marginRight: 10 }}
+            id="outlined-read-only-input"
+            label="Full Name"
+            defaultValue="Kevin"
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            style={{ marginRight: 10 }}
+            id="outlined-read-only-input"
+            label="Email Address"
+            defaultValue="kevin@gmail.com"
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            style={{ marginRight: 10 }}
+            id="outlined-read-only-input"
+            label="Password"
+            defaultValue="12345"
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            style={{ marginRight: 10 }}
+            id="outlined-read-only-input"
+            label="Account"
+            defaultValue="Agent"
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Grid>
+      </MDBox>
+      <MDBox mt={4.5}></MDBox>
+      <Box sx={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          checkboxSelection
+          disableRowSelectionOnClick
+        />
+      </Box>
     </DashboardLayout>
   );
 }
