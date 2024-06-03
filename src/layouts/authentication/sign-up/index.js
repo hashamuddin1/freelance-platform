@@ -48,7 +48,7 @@ function Cover() {
     event.preventDefault();
 
     try {
-      if (emailAddress === "" || password === "") {
+      if (emailAddress === "" || password === "" || fullName === "") {
         setIsLoading(false);
         return simulateError("First Fill All The Fields");
       }
