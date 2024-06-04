@@ -60,6 +60,7 @@
     ]
   },
   "devDependencies": {
+    "ajv": "^7.2.4",
     "eslint": "8.39.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
