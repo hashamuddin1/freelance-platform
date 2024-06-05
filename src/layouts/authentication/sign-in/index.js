@@ -63,6 +63,14 @@ function Basic() {
         }
 
         localStorage.setItem("token", token);
+
+        if (message === "First Complete Your Profile") {
+          navigate("/completeprofile/Agent");
+        }
+
+        if (message === "First Verify Your Profile") {
+          navigate("/authentication/quizAgent");
+        }
         setIsLoading(false);
         return showSuccessModal("Agent Sign In Successfully");
       }

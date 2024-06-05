@@ -48,7 +48,7 @@ function Basic() {
         setIsLoading(false);
         return simulateError("First Fill All The Fields");
       }
-      console.log(APP_URL);
+
       const response = await axios.post(`${APP_URL}/api/userSignIn`, {
         emailAddress,
         password,
@@ -63,18 +63,18 @@ function Basic() {
         }
 
         localStorage.setItem("token", token);
+        if (message === "First Complete Your Profile") {
+          navigate("/completeprofile/Client");
+        }
+
         setIsLoading(false);
         return showSuccessModal("Client Sign In Successfully");
       }
     } catch (error) {
       const message =
         error.response && error.response.data.message ? error.response.data.message : error.message;
-      if (message === "First Complete Your Profile") {
-        navigate("/completeprofile/Client");
-      } else {
-        setIsLoading(false);
-        return simulateError(message);
-      }
+      setIsLoading(false);
+      return simulateError(message);
     }
   };
 
