@@ -63,12 +63,12 @@ function Basic() {
         }
 
         localStorage.setItem("token", token);
-        if (message === "First Complete Your Profile") {
+        if (response.data.message === "First Complete Your Profile") {
           navigate("/completeprofile/Client");
+        } else {
+          setIsLoading(false);
+          return showSuccessModal("Client Sign In Successfully");
         }
-
-        setIsLoading(false);
-        return showSuccessModal("Client Sign In Successfully");
       }
     } catch (error) {
       const message =

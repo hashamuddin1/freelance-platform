@@ -64,27 +64,20 @@ function Basic() {
 
         localStorage.setItem("token", token);
 
-        if (message === "First Complete Your Profile") {
+        if (response.data.message === "First Complete Your Profile") {
           navigate("/completeprofile/Agent");
-        }
-
-        if (message === "First Verify Your Profile") {
+        } else if (response.data.message === "First Verify Your Profile") {
           navigate("/authentication/quizAgent");
+        } else {
+          setIsLoading(false);
+          return showSuccessModal("Agent Sign In Successfully");
         }
-        setIsLoading(false);
-        return showSuccessModal("Agent Sign In Successfully");
       }
     } catch (error) {
       const message =
         error.response && error.response.data.message ? error.response.data.message : error.message;
-      if (message === "First Complete Your Profile") {
-        navigate("/completeprofile/Agent");
-      } else if (message === "First Verify Your Profile") {
-        navigate("/completeprofile/quizAgent");
-      } else {
-        setIsLoading(false);
-        return simulateError(message);
-      }
+      setIsLoading(false);
+      return simulateError(message);
     }
   };
 
