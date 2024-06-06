@@ -3,11 +3,8 @@ import { Link } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
-import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Radio from "@mui/material/Radio";
-import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 
 // Material Dashboard 2 React components
@@ -71,7 +68,7 @@ function Basic() {
     setSuccess(successMessage);
     setTimeout(() => {
       setSuccess(null);
-      navigate("/agentdashboard");
+      navigate("/agent-dashboard");
     }, 3000);
   };
 

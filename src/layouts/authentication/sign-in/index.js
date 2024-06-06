@@ -85,7 +85,7 @@ function Basic() {
     setSuccess(successMessage);
     setTimeout(() => {
       setSuccess(null);
-      navigate("/agentdashboard");
+      navigate("/agent-dashboard");
     }, 3000);
   };
 

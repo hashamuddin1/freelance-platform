@@ -9,13 +9,9 @@ import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
-// Data
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
-
 // Dashboard components
 
 //appbar
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -29,6 +25,11 @@ import MDTypography from "components/MDTypography";
 
 //getprofile
 import TextField from "@mui/material/TextField";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { APP_URL } from "../../config";
+import Alert from "@mui/material/Alert";
+import Skeleton from "@mui/material/Skeleton";
 
 const pages = [
   { page: "Profile", link: "agent-dashboard" },
@@ -40,6 +41,19 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 function Dashboard() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const SkeletonTable = () => (
+    <div style={{ height: 450, width: "100%" }}>
+      {[...Array(10)].map((_, index) => (
+        <div key={index} style={{ marginBottom: 10 }}>
+          <Skeleton variant="rectangular" height={30} animation="wave" />
+        </div>
+      ))}
+    </div>
+  );
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -52,161 +66,225 @@ function Dashboard() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const { sales, tasks } = reportsLineChartData;
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/authentication/first-page");
+    }
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${APP_URL}/api/getUserProfile`, {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        });
+        if (response.data.data) {
+          setData(response.data.data);
+          console.log(response.data.data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        const message =
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+
+        return simulateError(message);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const simulateError = (errorMessage) => {
+    setError(errorMessage);
+    setTimeout(() => {
+      setError(null);
+      setIsLoading(false);
+    }, 3000);
+  };
+
+  if (isLoading) {
+    return (
+      <>
+        <Box sx={{ display: "flex" }}>
+          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <SkeletonTable />
+          </Box>
+        </Box>
+      </>
+    );
+  }
 
   return (
-    <DashboardLayout>
-      <AppBar position="static">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: "block", md: "none" },
-                }}
-              >
-                {pages.map((page) => (
-                  <MenuItem key={page.page} onClick={handleCloseNavMenu}>
-                    <MDTypography
-                      component={Link}
-                      to={`/${page.link}`}
-                      variant="button"
-                      color="white"
-                      fontWeight="medium"
-                    >
-                      {page.page}
-                    </MDTypography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
-                <MDTypography
-                  component={Link}
-                  to={`/${page.link}`}
-                  variant="button"
-                  color="black"
-                  key={page.page}
-                  fontWeight="medium"
-                  sx={{ marginRight: 5 }}
+    <>
+      {error && (
+        <Alert variant="filled" severity="error">
+          {error}
+        </Alert>
+      )}
+      <DashboardLayout>
+        <AppBar position="static">
+          <Container maxWidth="xl">
+            <Toolbar disableGutters>
+              <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenNavMenu}
+                  color="inherit"
                 >
-                  {page.page}
-                </MDTypography>
-              ))}
-            </Box>
-
-            <Box sx={{ flexGrow: 0 }}>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElNav}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  open={Boolean(anchorElNav)}
+                  onClose={handleCloseNavMenu}
+                  sx={{
+                    display: { xs: "block", md: "none" },
+                  }}
+                >
+                  {pages.map((page) => (
+                    <MenuItem key={page.page} onClick={handleCloseNavMenu}>
+                      <MDTypography
+                        component={Link}
+                        to={`/${page.link}`}
+                        variant="button"
+                        color="white"
+                        fontWeight="medium"
+                      >
+                        {page.page}
+                      </MDTypography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                {pages.map((page) => (
+                  <MDTypography
+                    component={Link}
+                    to={`/${page.link}`}
+                    variant="button"
+                    color="black"
+                    key={page.page}
+                    fontWeight="medium"
+                    sx={{ marginRight: 5 }}
+                  >
+                    {page.page}
+                  </MDTypography>
                 ))}
-              </Menu>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
-      <MDBox py={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Pending Orders"
-                count={281}
+              </Box>
+
+              <Box sx={{ flexGrow: 0 }}>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </Toolbar>
+          </Container>
+        </AppBar>
+        <MDBox py={3}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="dark"
+                  icon="weekend"
+                  title="Pending Orders"
+                  count={281}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard icon="leaderboard" title="Completed Orders" count="2,300" />
+              </MDBox>
+            </Grid>
+          </Grid>
+          <MDBox mt={4.5}></MDBox>
+          <MDBox>
+            <Grid item xs={12} md={6} lg={4}>
+              <TextField
+                style={{ marginRight: 10 }}
+                id="outlined-read-only-input"
+                label="Full Name"
+                defaultValue={data.fullName}
+                InputProps={{
+                  readOnly: true,
+                }}
               />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard icon="leaderboard" title="Completed Orders" count="2,300" />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <MDBox mt={4.5}></MDBox>
-        <MDBox>
-          <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              style={{ marginRight: 10 }}
-              id="outlined-read-only-input"
-              label="Full Name"
-              defaultValue="Kevin"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              style={{ marginRight: 10 }}
-              id="outlined-read-only-input"
-              label="Email Address"
-              defaultValue="kevin@gmail.com"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              style={{ marginRight: 10 }}
-              id="outlined-read-only-input"
-              label="Password"
-              defaultValue="12345"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              style={{ marginRight: 10 }}
-              id="outlined-read-only-input"
-              label="Account"
-              defaultValue="Agent"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
+              <TextField
+                style={{ marginRight: 10 }}
+                id="outlined-read-only-input"
+                label="Email Address"
+                defaultValue={data.emailAddress}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                style={{ marginRight: 10 }}
+                id="outlined-read-only-input"
+                label="Password"
+                defaultValue={data.password}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                style={{ marginRight: 10 }}
+                id="outlined-read-only-input"
+                label="Account"
+                defaultValue="Agent"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                style={{ marginRight: 10 }}
+                id="outlined-read-only-input"
+                label="Price"
+                defaultValue={`$ ${data.price}`}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+          </MDBox>
         </MDBox>
-      </MDBox>
-    </DashboardLayout>
+      </DashboardLayout>
+    </>
   );
 }
 
