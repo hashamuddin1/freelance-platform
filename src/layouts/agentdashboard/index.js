@@ -256,15 +256,6 @@ function Dashboard() {
               <TextField
                 style={{ marginRight: 10 }}
                 id="outlined-read-only-input"
-                label="Password"
-                defaultValue={data.password}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              <TextField
-                style={{ marginRight: 10 }}
-                id="outlined-read-only-input"
                 label="Account"
                 defaultValue="Agent"
                 InputProps={{
