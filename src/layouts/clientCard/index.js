@@ -20,6 +20,10 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 
+import { APP_URL } from "../../config";
+import axios from "axios";
+import Alert from "@mui/material/Alert";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -126,6 +130,13 @@ export default function ClientCard() {
   const handleClose = () => setOpen(false);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [error, setError] = React.useState(null);
+  const [success, setSuccess] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [cardNumber, setCardNumber] = React.useState(false);
+  const [expYear, setExpYear] = React.useState(false);
+  const [expMonth, setExpMonth] = React.useState(false);
+  const [cvc, setCvc] = React.useState(false);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -138,8 +149,60 @@ export default function ClientCard() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const submitResult = async (event) => {
+    setIsLoading(true);
+    event.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/authentication/first-page");
+      }
+      const response = await axios.post(
+        `${APP_URL}/api/insertCard`,
+        {},
+        { headers: { "x-access-token": token } }
+      );
+      if (response.data.success === true) {
+        setIsLoading(false);
+        return showSuccessModal("Card Added Successfully");
+      }
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message ? error.response.data.message : error.message;
+      setIsLoading(false);
+      return simulateError(message);
+    }
+  };
+
+  const showSuccessModal = (successMessage) => {
+    setSuccess(successMessage);
+    setTimeout(() => {
+      setSuccess(null);
+      setOpen(false);
+    }, 3000);
+  };
+
+  const simulateError = (errorMessage) => {
+    setError(errorMessage);
+    setTimeout(() => {
+      setError(null);
+    }, 3000);
+  };
   return (
     <>
+      {error && (
+        <Alert variant="filled" severity="error">
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="filled" severity="success">
+          {success}
+        </Alert>
+      )}
       <DashboardLayout>
         <AppBar position="static">
           <Container maxWidth="xl">
@@ -232,7 +295,7 @@ export default function ClientCard() {
           </Container>
         </AppBar>
         <Button onClick={handleOpen}>ADD CARD</Button>
-        <Box sx={{ height: 400, width: "100%" }}>
+        {/* <Box sx={{ height: 400, width: "100%" }}>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -247,7 +310,7 @@ export default function ClientCard() {
             checkboxSelection
             disableRowSelectionOnClick
           />
-        </Box>
+        </Box> */}
         <Modal
           open={open}
           onClose={handleClose}
@@ -268,7 +331,7 @@ export default function ClientCard() {
               <TextField
                 style={{ marginBottom: 10 }}
                 id="outlined-basic"
-                label="Expiry date"
+                label="Expiry Year"
                 variant="outlined"
               />
               <TextField
@@ -284,7 +347,7 @@ export default function ClientCard() {
                 variant="outlined"
               />
             </Typography>
-            <Button variant="contained" style={{ color: "white" }}>
+            <Button variant="contained" onClick={submitResult} style={{ color: "white" }}>
               Save
             </Button>
           </Box>

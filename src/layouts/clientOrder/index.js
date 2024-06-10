@@ -1,4 +1,3 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -16,6 +15,12 @@ import MDTypography from "components/MDTypography";
 import { Link } from "react-router-dom";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { APP_URL } from "../../config";
+import Alert from "@mui/material/Alert";
+import Skeleton from "@mui/material/Skeleton";
+
 const pages = [
   { page: "Home", link: "dashboard" },
   { page: "Orders", link: "clientOrder" },
@@ -32,6 +37,9 @@ const bull = (
 export default function ClientOrder() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -47,6 +55,65 @@ export default function ClientOrder() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const SkeletonTable = () => (
+    <div style={{ height: 450, width: "100%" }}>
+      {[...Array(10)].map((_, index) => (
+        <div key={index} style={{ marginBottom: 10 }}>
+          <Skeleton variant="rectangular" height={30} animation="wave" />
+        </div>
+      ))}
+    </div>
+  );
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/authentication/first-page");
+    }
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${APP_URL}/api/fetchAllOrderByClient`, {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        });
+        if (response.data.data) {
+          setData(response.data.data);
+          console.log(response.data.data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        const message =
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+
+        return simulateError(message);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const simulateError = (errorMessage) => {
+    setError(errorMessage);
+    setTimeout(() => {
+      setError(null);
+      setIsLoading(false);
+    }, 3000);
+  };
+
+  if (isLoading) {
+    return (
+      <>
+        <Box sx={{ display: "flex" }}>
+          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <SkeletonTable />
+          </Box>
+        </Box>
+      </>
+    );
+  }
   return (
     <>
       <DashboardLayout>
@@ -140,74 +207,31 @@ export default function ClientOrder() {
             </Toolbar>
           </Container>
         </AppBar>
-        <Card sx={{ minWidth: 275, marginBottom: 4 }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-              John Smith
-            </Typography>
-            <Typography variant="h5" component="div">
-              Project Title
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              $59
-            </Typography>
-            <Typography variant="body2">
-              Description
-              <br />
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ minWidth: 275, marginBottom: 4 }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-              John Smith
-            </Typography>
-            <Typography variant="h5" component="div">
-              Project Title
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              $59
-            </Typography>
-            <Typography variant="body2">
-              Description
-              <br />
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ minWidth: 275, marginBottom: 4 }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-              John Smith
-            </Typography>
-            <Typography variant="h5" component="div">
-              Project Title
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              $59
-            </Typography>
-            <Typography variant="body2">
-              Description
-              <br />
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ minWidth: 275, marginBottom: 4 }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-              John Smith
-            </Typography>
-            <Typography variant="h5" component="div">
-              Project Title
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              $59
-            </Typography>
-            <Typography variant="body2">
-              Description
-              <br />
-            </Typography>
-          </CardContent>
-        </Card>
+        {data.map((data, index) => (
+          // eslint-disable-next-line react/jsx-key
+          <Card sx={{ minWidth: 275, marginBottom: 4 }}>
+            <CardContent>
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                {data.agentId.fullName}
+              </Typography>
+              <Typography variant="h5" component="div">
+                {data.title}
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                $ {data.price}
+              </Typography>
+              <Typography variant="body2">
+                {data.description}
+                <br />
+                <br />
+              </Typography>
+              <Typography variant="body2">
+                Status: {data.status}
+                <br />
+              </Typography>
+            </CardContent>
+          </Card>
+        ))}
       </DashboardLayout>
     </>
   );
