@@ -64,6 +64,7 @@ export default function AgentOrder() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [orderKPI, setOrderKPI] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -114,6 +115,29 @@ export default function AgentOrder() {
       }
     };
     fetchData();
+
+    const fetchKPIData = async () => {
+      try {
+        const response = await axios.get(`${APP_URL}/api/fetchOrderKPIbyAgent`, {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        });
+        if (response.data.data) {
+          setOrderKPI(response.data.data);
+          console.log(response.data.data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        const message =
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+
+        return simulateError(message);
+      }
+    };
+    fetchKPIData();
   }, []);
 
   const simulateError = (errorMessage) => {
@@ -147,7 +171,7 @@ export default function AgentOrder() {
     }));
   }
 
-  if (data) {
+  if (data && orderKPI) {
     return (
       <>
         {error && (
@@ -253,13 +277,17 @@ export default function AgentOrder() {
                   color="dark"
                   icon="weekend"
                   title="Pending Orders"
-                  count={281}
+                  count={orderKPI.pendingOrder}
                 />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={1.5}>
-                <ComplexStatisticsCard icon="leaderboard" title="Completed Orders" count="2,300" />
+                <ComplexStatisticsCard
+                  icon="leaderboard"
+                  title="Completed Orders"
+                  count={orderKPI.completedOrder}
+                />
               </MDBox>
             </Grid>
           </Grid>
