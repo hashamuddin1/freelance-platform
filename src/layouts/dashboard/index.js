@@ -73,6 +73,7 @@ function Dashboard() {
   const [orderTitle, setOrderTitle] = useState(null);
   const [orderDescription, setOrderDescription] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [orderKPI, setOrderKPI] = useState(null);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = (agentId, price) => {
@@ -221,6 +222,29 @@ function Dashboard() {
       }
     };
     fetchAgentData();
+
+    const fetchKPIData = async () => {
+      try {
+        const response = await axios.get(`${APP_URL}/api/fetchOrderKPIbyClient`, {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        });
+        if (response.data.data) {
+          setOrderKPI(response.data.data);
+          console.log(response.data.data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        const message =
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+
+        return simulateError(message);
+      }
+    };
+    fetchKPIData();
   }, []);
 
   const simulateError = (errorMessage) => {
@@ -276,7 +300,7 @@ function Dashboard() {
     setAnchorElUser(null);
   };
 
-  if (data) {
+  if (data && orderKPI) {
     return (
       <>
         {error && (
@@ -388,13 +412,17 @@ function Dashboard() {
                     color="dark"
                     icon="weekend"
                     title="Total Orders"
-                    count={281}
+                    count={orderKPI.totalOrder}
                   />
                 </MDBox>
               </Grid>
               <Grid item xs={12} md={6} lg={3}>
                 <MDBox mb={1.5}>
-                  <ComplexStatisticsCard icon="leaderboard" title="Pending Orders" count="2,300" />
+                  <ComplexStatisticsCard
+                    icon="leaderboard"
+                    title="Pending Orders"
+                    count={orderKPI.pendingOrder}
+                  />
                 </MDBox>
               </Grid>
               <Grid item xs={12} md={6} lg={3}>
@@ -403,7 +431,7 @@ function Dashboard() {
                     color="success"
                     icon="store"
                     title="Completed Order"
-                    count="34k"
+                    count={orderKPI.completedOrder}
                   />
                 </MDBox>
               </Grid>
