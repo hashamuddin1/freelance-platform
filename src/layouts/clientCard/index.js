@@ -43,87 +43,6 @@ const pages = [
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const columns = [
-  { field: "id", headerName: "ID", width: 90 },
-  {
-    field: "ClientName",
-    headerName: "Client Name",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "price",
-    headerName: "Price",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "date",
-    headerName: "Date",
-    width: 110,
-    editable: true,
-  },
-];
-
-const rows = [
-  { id: 1, lastName: "Snow", ClientName: "Jon", price: 14, date: "2024-05-23", status: "Complete" },
-  {
-    id: 2,
-    lastName: "Lannister",
-    ClientName: "Cersei",
-    price: 31,
-    date: "2023-04-23",
-  },
-  {
-    id: 3,
-    lastName: "Lannister",
-    ClientName: "Jaime",
-    price: 31,
-    date: "2024-07-23",
-  },
-  {
-    id: 4,
-    lastName: "Stark",
-    ClientName: "Arya",
-    price: 11,
-    date: "2024-05-26",
-  },
-  {
-    id: 5,
-    lastName: "Targaryen",
-    ClientName: "Daenerys",
-    price: 55,
-    date: "2024-05-20",
-  },
-  {
-    id: 6,
-    lastName: "Melisandre",
-    ClientName: null,
-    price: 150,
-    date: "2022-05-23",
-  },
-  {
-    id: 7,
-    lastName: "Clifford",
-    ClientName: "Ferrara",
-    price: 44,
-    date: "2024-05-23",
-  },
-  {
-    id: 8,
-    lastName: "Frances",
-    ClientName: "Rossini",
-    price: 36,
-    date: "2024-05-23",
-  },
-  {
-    id: 9,
-    lastName: "Roxie",
-    ClientName: "Harvey",
-    price: 65,
-    date: "2024-05-23",
-  },
-];
 export default function ClientCard() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -295,22 +214,6 @@ export default function ClientCard() {
           </Container>
         </AppBar>
         <Button onClick={handleOpen}>ADD CARD</Button>
-        {/* <Box sx={{ height: 400, width: "100%" }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
-            pageSizeOptions={[5]}
-            checkboxSelection
-            disableRowSelectionOnClick
-          />
-        </Box> */}
         <Modal
           open={open}
           onClose={handleClose}

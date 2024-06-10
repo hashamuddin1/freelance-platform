@@ -1,6 +1,5 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Grid from "@mui/material/Grid";
 import MDBox from "components/MDBox";
@@ -19,6 +18,9 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
+import { APP_URL } from "../../config";
+import axios from "axios";
+import Alert from "@mui/material/Alert";
 
 const style = {
   position: "absolute",
@@ -39,93 +41,55 @@ const pages = [
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const columns = [
-  { field: "id", headerName: "ID", width: 90 },
-  {
-    field: "ClientName",
-    headerName: "Client Name",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "price",
-    headerName: "Price",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "date",
-    headerName: "Date",
-    width: 110,
-    editable: true,
-  },
-];
-
-const rows = [
-  { id: 1, lastName: "Snow", ClientName: "Jon", price: 14, date: "2024-05-23", status: "Complete" },
-  {
-    id: 2,
-    lastName: "Lannister",
-    ClientName: "Cersei",
-    price: 31,
-    date: "2023-04-23",
-  },
-  {
-    id: 3,
-    lastName: "Lannister",
-    ClientName: "Jaime",
-    price: 31,
-    date: "2024-07-23",
-  },
-  {
-    id: 4,
-    lastName: "Stark",
-    ClientName: "Arya",
-    price: 11,
-    date: "2024-05-26",
-  },
-  {
-    id: 5,
-    lastName: "Targaryen",
-    ClientName: "Daenerys",
-    price: 55,
-    date: "2024-05-20",
-  },
-  {
-    id: 6,
-    lastName: "Melisandre",
-    ClientName: null,
-    price: 150,
-    date: "2022-05-23",
-  },
-  {
-    id: 7,
-    lastName: "Clifford",
-    ClientName: "Ferrara",
-    price: 44,
-    date: "2024-05-23",
-  },
-  {
-    id: 8,
-    lastName: "Frances",
-    ClientName: "Rossini",
-    price: 36,
-    date: "2024-05-23",
-  },
-  {
-    id: 9,
-    lastName: "Roxie",
-    ClientName: "Harvey",
-    price: 65,
-    date: "2024-05-23",
-  },
-];
 export default function BankAccount() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [error, setError] = React.useState(null);
+  const [success, setSuccess] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const submitResult = async (event) => {
+    setIsLoading(true);
+    event.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/authentication/first-page");
+      }
+      const response = await axios.post(
+        `${APP_URL}/api/insertBank`,
+        {},
+        { headers: { "x-access-token": token } }
+      );
+      if (response.data.success === true) {
+        setIsLoading(false);
+        return showSuccessModal("Bank Added Successfully");
+      }
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message ? error.response.data.message : error.message;
+      setIsLoading(false);
+      return simulateError(message);
+    }
+  };
+
+  const showSuccessModal = (successMessage) => {
+    setSuccess(successMessage);
+    setTimeout(() => {
+      setSuccess(null);
+      setOpen(false);
+    }, 3000);
+  };
+  const simulateError = (errorMessage) => {
+    setError(errorMessage);
+    setTimeout(() => {
+      setError(null);
+    }, 3000);
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -140,6 +104,17 @@ export default function BankAccount() {
   };
   return (
     <>
+      {error && (
+        <Alert variant="filled" severity="error">
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="filled" severity="success">
+          {success}
+        </Alert>
+      )}
       <DashboardLayout>
         <AppBar position="static">
           <Container maxWidth="xl">
@@ -244,22 +219,6 @@ export default function BankAccount() {
           </Grid>
         </Grid>
         <Button onClick={handleOpen}>ADD BANK ACCOUNT</Button>
-        <Box sx={{ height: 400, width: "100%" }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
-            pageSizeOptions={[5]}
-            checkboxSelection
-            disableRowSelectionOnClick
-          />
-        </Box>
         <Modal
           open={open}
           onClose={handleClose}
@@ -290,7 +249,7 @@ export default function BankAccount() {
                 variant="outlined"
               />
             </Typography>
-            <Button variant="contained" style={{ color: "white" }}>
+            <Button variant="contained" onClick={submitResult} style={{ color: "white" }}>
               Save
             </Button>
           </Box>
