@@ -174,6 +174,7 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("token", token);
     if (!token) {
       navigate("/authentication/first-page");
     }
@@ -300,7 +301,7 @@ function Dashboard() {
     setAnchorElUser(null);
   };
 
-  if (data && orderKPI) {
+  if (data && orderKPI && agentData) {
     return (
       <>
         {error && (

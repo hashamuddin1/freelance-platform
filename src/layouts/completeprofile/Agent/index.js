@@ -87,14 +87,6 @@ function Agent() {
         { headers: { "x-access-token": token } }
       );
       if (response.data.success === true) {
-        const token = response.data.token;
-
-        const checkToken = localStorage.getItem("token");
-        if (checkToken) {
-          localStorage.removeItem("token");
-        }
-
-        localStorage.setItem("token", token);
         setIsLoading(false);
         return showSuccessModal("Agent Complete Profile Successfully");
       }

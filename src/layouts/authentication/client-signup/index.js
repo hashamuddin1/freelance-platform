@@ -68,6 +68,7 @@ function Cover() {
           localStorage.removeItem("token");
         }
 
+        console.log("token", token);
         localStorage.setItem("token", token);
         setIsLoading(false);
         return showSuccessModal("Client Sign Up Successfully");

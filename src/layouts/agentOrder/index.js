@@ -20,6 +20,7 @@ import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
 import { APP_URL } from "../../config";
 import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 
 const pages = [
   { page: "Profile", link: "agent-dashboard" },
@@ -28,36 +29,6 @@ const pages = [
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const columns = [
-  { field: "id", headerName: "ID", width: 90 },
-  {
-    field: "clientId",
-    headerName: "Client Name",
-    width: 150,
-    renderCell: (params) => params.row.clientId.fullName,
-  },
-  {
-    field: "price",
-    headerName: "Price",
-    width: 150,
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    width: 110,
-  },
-  {
-    field: "title",
-    headerName: "Title",
-    width: 110,
-  },
-  {
-    field: "description",
-    headerName: "Description",
-    width: 110,
-  },
-];
-
 export default function AgentOrder() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -65,6 +36,95 @@ export default function AgentOrder() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [orderKPI, setOrderKPI] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const columns = [
+    { field: "id", headerName: "ID", width: 90 },
+    {
+      field: "clientId",
+      headerName: "Client Name",
+      width: 150,
+      renderCell: (params) => params.row.clientId.fullName,
+    },
+    {
+      field: "price",
+      headerName: "Price",
+      width: 150,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 110,
+    },
+    {
+      field: "title",
+      headerName: "Title",
+      width: 110,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      width: 110,
+    },
+    {
+      field: "changeStatus",
+      headerName: "Change Status",
+      headerAlign: "center",
+      width: 200,
+      renderCell: (params) => (
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleChangeStatus(params.row.id);
+          }}
+          variant="contained"
+          sx={{ backgroundColor: "orange", color: "white" }}
+        >
+          Change Status
+        </Button>
+      ),
+    },
+  ];
+
+  const handleChangeStatus = async (orderId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/authentication/first-page");
+      }
+
+      const response = await axios.put(
+        `${APP_URL}/api/changeOrderStatus`,
+        {
+          orderId: orderId,
+        },
+        {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        }
+      );
+
+      setData((prevData) => {
+        return prevData.map((order) => {
+          if (order._id === orderId) {
+            return { ...order, status: "completed" };
+          }
+          return order;
+        });
+      });
+      showSuccessModal(response.data.message);
+    } catch (error) {
+      console.error("Delete user error:", error);
+    }
+  };
+
+  const showSuccessModal = (successMessage) => {
+    setSuccess(successMessage);
+    setTimeout(() => {
+      setSuccess(null);
+    }, 3000);
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -177,6 +237,11 @@ export default function AgentOrder() {
         {error && (
           <Alert variant="filled" severity="error">
             {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="filled" severity="success">
+            {success}
           </Alert>
         )}
         <DashboardLayout>

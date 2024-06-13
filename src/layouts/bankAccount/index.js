@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Grid from "@mui/material/Grid";
@@ -21,6 +21,7 @@ import TextField from "@mui/material/TextField";
 import { APP_URL } from "../../config";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
+import Skeleton from "@mui/material/Skeleton";
 
 const style = {
   position: "absolute",
@@ -50,6 +51,17 @@ export default function BankAccount() {
   const [error, setError] = React.useState(null);
   const [success, setSuccess] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [data, setData] = React.useState(false);
+
+  const SkeletonTable = () => (
+    <div style={{ height: 450, width: "100%" }}>
+      {[...Array(10)].map((_, index) => (
+        <div key={index} style={{ marginBottom: 10 }}>
+          <Skeleton variant="rectangular" height={30} animation="wave" />
+        </div>
+      ))}
+    </div>
+  );
 
   const submitResult = async (event) => {
     setIsLoading(true);
@@ -77,6 +89,36 @@ export default function BankAccount() {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/authentication/first-page");
+    }
+
+    const fetchKPIData = async () => {
+      try {
+        const response = await axios.get(`${APP_URL}/api/totalEarningKPI`, {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        });
+        if (response.data.data) {
+          setData(response.data.data);
+          console.log(response.data.data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        const message =
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+
+        return simulateError(message);
+      }
+    };
+    fetchKPIData();
+  }, []);
+
   const showSuccessModal = (successMessage) => {
     setSuccess(successMessage);
     setTimeout(() => {
@@ -102,159 +144,171 @@ export default function BankAccount() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  return (
-    <>
-      {error && (
-        <Alert variant="filled" severity="error">
-          {error}
-        </Alert>
-      )}
 
-      {success && (
-        <Alert variant="filled" severity="success">
-          {success}
-        </Alert>
-      )}
-      <DashboardLayout>
-        <AppBar position="static">
-          <Container maxWidth="xl">
-            <Toolbar disableGutters>
-              <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleOpenNavMenu}
-                  color="inherit"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorElNav}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                  open={Boolean(anchorElNav)}
-                  onClose={handleCloseNavMenu}
-                  sx={{
-                    display: { xs: "block", md: "none" },
-                  }}
-                >
-                  {pages.map((page) => (
-                    <MenuItem key={page.page} onClick={handleCloseNavMenu}>
-                      <MDTypography
-                        component={Link}
-                        to={`/${page.link}`}
-                        variant="button"
-                        color="white"
-                        fontWeight="medium"
-                      >
-                        {page.page}
-                      </MDTypography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                {pages.map((page) => (
-                  <MDTypography
-                    component={Link}
-                    to={`/${page.link}`}
-                    variant="button"
-                    color="black"
-                    key={page.page}
-                    fontWeight="medium"
-                    sx={{ marginRight: 5 }}
-                  >
-                    {page.page}
-                  </MDTypography>
-                ))}
-              </Box>
-
-              <Box sx={{ flexGrow: 0 }}>
-                <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-            </Toolbar>
-          </Container>
-        </AppBar>
-        <Grid container spacing={3} py={3}>
-          <Grid item xs={12} md={6} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Total Earning"
-                count={281}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Button onClick={handleOpen}>ADD BANK ACCOUNT</Button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Add Bank Account Detail
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                style={{ marginBottom: 10 }}
-                id="outlined-basic"
-                label="Bank Name"
-                variant="outlined"
-              />
-              <TextField
-                style={{ marginBottom: 10 }}
-                id="outlined-basic"
-                label="Account Number"
-                variant="outlined"
-              />
-              <TextField
-                style={{ marginBottom: 10 }}
-                id="outlined-basic"
-                label="Branch Name"
-                variant="outlined"
-              />
-            </Typography>
-            <Button variant="contained" onClick={submitResult} style={{ color: "white" }}>
-              Save
-            </Button>
+  if (isLoading) {
+    return (
+      <>
+        <Box sx={{ display: "flex" }}>
+          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <SkeletonTable />
           </Box>
-        </Modal>
-      </DashboardLayout>
-    </>
-  );
+        </Box>
+      </>
+    );
+  }
+  if (data) {
+    return (
+      <>
+        {error && (
+          <Alert variant="filled" severity="error">
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="filled" severity="success">
+            {success}
+          </Alert>
+        )}
+        <DashboardLayout>
+          <AppBar position="static">
+            <Container maxWidth="xl">
+              <Toolbar disableGutters>
+                <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleOpenNavMenu}
+                    color="inherit"
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorElNav}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    open={Boolean(anchorElNav)}
+                    onClose={handleCloseNavMenu}
+                    sx={{
+                      display: { xs: "block", md: "none" },
+                    }}
+                  >
+                    {pages.map((page) => (
+                      <MenuItem key={page.page} onClick={handleCloseNavMenu}>
+                        <MDTypography
+                          component={Link}
+                          to={`/${page.link}`}
+                          variant="button"
+                          color="white"
+                          fontWeight="medium"
+                        >
+                          {page.page}
+                        </MDTypography>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
+                <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                  {pages.map((page) => (
+                    <MDTypography
+                      component={Link}
+                      to={`/${page.link}`}
+                      variant="button"
+                      color="black"
+                      key={page.page}
+                      fontWeight="medium"
+                      sx={{ marginRight: 5 }}
+                    >
+                      {page.page}
+                    </MDTypography>
+                  ))}
+                </Box>
+                <Box sx={{ flexGrow: 0 }}>
+                  <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    {settings.map((setting) => (
+                      <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                        <Typography textAlign="center">{setting}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
+              </Toolbar>
+            </Container>
+          </AppBar>
+          <Grid container spacing={3} py={3}>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="dark"
+                  icon="weekend"
+                  title="Total Earning"
+                  count={data}
+                />
+              </MDBox>
+            </Grid>
+          </Grid>
+          <Button onClick={handleOpen}>ADD BANK ACCOUNT</Button>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Add Bank Account Detail
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                <TextField
+                  style={{ marginBottom: 10 }}
+                  id="outlined-basic"
+                  label="Bank Name"
+                  variant="outlined"
+                />
+                <TextField
+                  style={{ marginBottom: 10 }}
+                  id="outlined-basic"
+                  label="Account Number"
+                  variant="outlined"
+                />
+                <TextField
+                  style={{ marginBottom: 10 }}
+                  id="outlined-basic"
+                  label="Branch Name"
+                  variant="outlined"
+                />
+              </Typography>
+              <Button variant="contained" onClick={submitResult} style={{ color: "white" }}>
+                Save
+              </Button>
+            </Box>
+          </Modal>
+        </DashboardLayout>
+      </>
+    );
+  }
 }
