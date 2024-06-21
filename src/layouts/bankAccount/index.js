@@ -39,6 +39,7 @@ const pages = [
   { page: "Profile", link: "agent-dashboard" },
   { page: "Orders", link: "agentOrder" },
   { page: "Bank Account", link: "BankAccount" },
+  { page: "Contact Admin", link: "ContactAdmin" },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 

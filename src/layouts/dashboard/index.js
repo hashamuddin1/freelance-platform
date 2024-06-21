@@ -39,11 +39,13 @@ import "../../App.css";
 
 //modal
 import Modal from "@mui/material/Modal";
+import { useNavigate } from "react-router-dom";
 
 const pages = [
   { page: "Home", link: "dashboard" },
   { page: "Orders", link: "clientOrder" },
   { page: "Card", link: "ClientCard" },
+  { page: "Contact Admin", link: "ContactAdmin" },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -60,6 +62,7 @@ const style = {
 };
 
 function Dashboard() {
+  const navigate = useNavigate();
   const { sales, tasks } = reportsLineChartData;
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -82,6 +85,11 @@ function Dashboard() {
     setAgentPrice(price);
   };
   const handleClose = () => setOpen(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/authentication/first-page");
+  };
 
   const submitResult = async (event) => {
     event.preventDefault();
@@ -358,6 +366,9 @@ function Dashboard() {
                         >
                           {page.page}
                         </MDTypography>
+                        <Button variant="contained" onClick={handleLogout} className="btn">
+                          Logout
+                        </Button>
                       </MenuItem>
                     ))}
                   </Menu>
@@ -376,6 +387,9 @@ function Dashboard() {
                       {page.page}
                     </MDTypography>
                   ))}
+                  <Button variant="contained" onClick={handleLogout} className="btn">
+                    Logout
+                  </Button>
                 </Box>
 
                 <Box sx={{ flexGrow: 0 }}>

@@ -22,6 +22,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import MDTypography from "components/MDTypography";
+import Button from "@mui/material/Button";
 
 //getprofile
 import TextField from "@mui/material/TextField";
@@ -30,15 +31,18 @@ import axios from "axios";
 import { APP_URL } from "../../config";
 import Alert from "@mui/material/Alert";
 import Skeleton from "@mui/material/Skeleton";
+import { useNavigate } from "react-router-dom";
 
 const pages = [
   { page: "Profile", link: "agent-dashboard" },
   { page: "Orders", link: "agentOrder" },
   { page: "Bank Account", link: "BankAccount" },
+  { page: "Contact Admin", link: "ContactAdmin" },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [data, setData] = useState(null);
@@ -66,6 +70,11 @@ function Dashboard() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/authentication/first-page");
   };
 
   useEffect(() => {
@@ -187,13 +196,16 @@ function Dashboard() {
                           component={Link}
                           to={`/${page.link}`}
                           variant="button"
-                          color="white"
+                          color="black"
                           fontWeight="medium"
                         >
                           {page.page}
                         </MDTypography>
                       </MenuItem>
                     ))}
+                    <Button variant="contained" onClick={handleLogout} className="btn">
+                      Logout
+                    </Button>
                   </Menu>
                 </Box>
                 <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
@@ -210,6 +222,9 @@ function Dashboard() {
                       {page.page}
                     </MDTypography>
                   ))}
+                  <Button variant="contained" onClick={handleLogout} className="btn">
+                    Logout
+                  </Button>
                 </Box>
 
                 <Box sx={{ flexGrow: 0 }}>

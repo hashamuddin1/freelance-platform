@@ -25,6 +25,7 @@ const pages = [
   { page: "Home", link: "dashboard" },
   { page: "Orders", link: "clientOrder" },
   { page: "Card", link: "ClientCard" },
+  { page: "Contact Admin", link: "ContactAdmin" },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 

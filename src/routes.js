@@ -17,6 +17,7 @@ import AgentOrder from "layouts/agentOrder";
 import BankAccount from "layouts/bankAccount";
 import ClientOrder from "layouts/clientOrder";
 import ClientCard from "layouts/clientCard";
+import ContactAdmin from "layouts/contactAdmin";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -85,6 +86,14 @@ const routes = [
     icon: <Icon fontSize="small">bankAccount</Icon>,
     route: "/bankAccount",
     component: <BankAccount />,
+  },
+  {
+    type: "",
+    name: "ContactAdmin",
+    key: "ContactAdmin",
+    icon: <Icon fontSize="small">ContactAdmin</Icon>,
+    route: "/ContactAdmin",
+    component: <ContactAdmin />,
   },
   {
     type: "",
