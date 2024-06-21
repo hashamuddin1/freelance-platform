@@ -20,6 +20,21 @@ import axios from "axios";
 import { APP_URL } from "../../config";
 import Alert from "@mui/material/Alert";
 import Skeleton from "@mui/material/Skeleton";
+import Modal from '@mui/material/Modal';
+import Rating from '@mui/material/Rating';
+import TextField from '@mui/material/TextField';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const pages = [
   { page: "Home", link: "dashboard" },
@@ -39,8 +54,14 @@ export default function ClientOrder() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [data, setData] = useState(null);
+  const [success, setSuccess] = React.useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
+  const [value, setValue] = React.useState(0);
+  const [description, setDescription] = useState(null);
+  const [agentId, setAgentId] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -48,6 +69,12 @@ export default function ClientOrder() {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
+
+  const handleOpen = (agentData) => {
+    console.log(agentData,'agentData')
+    setOpen(true);
+    setAgentId(agentData)
+  }
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -66,6 +93,37 @@ export default function ClientOrder() {
       ))}
     </div>
   );
+
+  const handleSubmit=async(event)=>{
+    event.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/authentication/first-page");
+      }
+      const response = await axios.post(
+        `${APP_URL}/api/giveRatings`,
+        {
+          agentId:agentId,
+          rate:value,
+          description:description
+        },
+        { headers: { "x-access-token": token } }
+      );
+      if (response.data.success === true) {
+        return showSuccessModal("Review Added Successfully");
+      }
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message ? error.response.data.message : error.message;
+      return simulateError(message);
+    }
+  }
+
+  const handleDescription=(event)=>{
+    setDescription(event.target.value)
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -96,6 +154,14 @@ export default function ClientOrder() {
     fetchData();
   }, []);
 
+  const showSuccessModal = (successMessage) => {
+    setSuccess(successMessage);
+    setTimeout(() => {
+      setSuccess(null);
+      setOpen(false);
+    }, 3000);
+  };
+
   const simulateError = (errorMessage) => {
     setError(errorMessage);
     setTimeout(() => {
@@ -119,6 +185,17 @@ export default function ClientOrder() {
   if (data) {
     return (
       <>
+      {error && (
+        <Alert variant="filled" severity="error">
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="filled" severity="success">
+          {success}
+        </Alert>
+      )}
         <DashboardLayout>
           <AppBar position="static">
             <Container maxWidth="xl">
@@ -232,9 +309,37 @@ export default function ClientOrder() {
                   Status: {data.status}
                   <br />
                 </Typography>
+                {data.status === "completed" && (
+                  <Button variant="contained" style={{ color: "white" }} onClick={()=>handleOpen(data.agentId._id)}>Review</Button>
+                )}
               </CardContent>
             </Card>
           ))}
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Review
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                <Rating
+                  name="simple-controlled"
+                  value={value}
+                  onChange={(event, newValue) => {
+                    setValue(newValue);
+                  }}
+                />
+                <br />
+                <TextField id="outlined-basic" label="Description" variant="outlined" value={description} onChange={handleDescription} />
+                <br /><br />
+                <Button variant="contained" style={{ color: "white" }} onClick={handleSubmit}>Submit</Button>
+              </Typography>
+            </Box>
+          </Modal>
         </DashboardLayout>
       </>
     );
