@@ -23,6 +23,7 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import MDTypography from "components/MDTypography";
 import Button from "@mui/material/Button";
+import { DataGrid } from "@mui/x-data-grid";
 
 //getprofile
 import TextField from "@mui/material/TextField";
@@ -49,6 +50,27 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [orderKPI, setOrderKPI] = useState(null);
+  const [reviewData, setReviewData] = useState(null);
+
+  const columns = [
+    { field: "id", headerName: "ID", width: 150 },
+    {
+      field: "clientId",
+      headerName: "Client Name",
+      width: 150,
+      renderCell: (params) => params.row.clientId.fullName,
+    },
+    {
+      field: "rate",
+      headerName: "Rate",
+      width: 110,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      width: 200,
+    },
+  ];
 
   const SkeletonTable = () => (
     <div style={{ height: 450, width: "100%" }}>
@@ -89,7 +111,13 @@ function Dashboard() {
             "x-access-token": `${token}`,
           },
         });
-        if (response.data.data) {
+        const reviewResponse = await axios.get(`${APP_URL}/api/fetchAllReviewsByAgent`, {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        });
+        if (response.data.data && reviewResponse.data.data) {
+          setReviewData(reviewResponse.data.data);
           setData(response.data.data);
           console.log(response.data.data);
           setIsLoading(false);
@@ -149,7 +177,17 @@ function Dashboard() {
     );
   }
 
-  if (data && orderKPI) {
+  let rows = [];
+  if (reviewData) {
+    rows = reviewData.map(({ _id, clientId, rate, description }) => ({
+      clientId,
+      rate,
+      description,
+      id: _id,
+    }));
+  }
+
+  if (data && orderKPI && reviewData) {
     return (
       <>
         {error && (
@@ -317,6 +355,22 @@ function Dashboard() {
                 />
               </Grid>
             </MDBox>
+            <Box sx={{ height: 400, width: "100%" }}>
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 5,
+                    },
+                  },
+                }}
+                pageSizeOptions={[5]}
+                checkboxSelection
+                disableRowSelectionOnClick
+              />
+            </Box>
           </MDBox>
         </DashboardLayout>
       </>

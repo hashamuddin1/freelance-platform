@@ -20,18 +20,18 @@ import axios from "axios";
 import { APP_URL } from "../../config";
 import Alert from "@mui/material/Alert";
 import Skeleton from "@mui/material/Skeleton";
-import Modal from '@mui/material/Modal';
-import Rating from '@mui/material/Rating';
-import TextField from '@mui/material/TextField';
+import Modal from "@mui/material/Modal";
+import Rating from "@mui/material/Rating";
+import TextField from "@mui/material/TextField";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -71,10 +71,10 @@ export default function ClientOrder() {
   };
 
   const handleOpen = (agentData) => {
-    console.log(agentData,'agentData')
+    console.log(agentData, "agentData");
     setOpen(true);
-    setAgentId(agentData)
-  }
+    setAgentId(agentData);
+  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -94,7 +94,7 @@ export default function ClientOrder() {
     </div>
   );
 
-  const handleSubmit=async(event)=>{
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
@@ -105,9 +105,9 @@ export default function ClientOrder() {
       const response = await axios.post(
         `${APP_URL}/api/giveRatings`,
         {
-          agentId:agentId,
-          rate:value,
-          description:description
+          agentId: agentId,
+          rate: value,
+          description: description,
         },
         { headers: { "x-access-token": token } }
       );
@@ -119,11 +119,11 @@ export default function ClientOrder() {
         error.response && error.response.data.message ? error.response.data.message : error.message;
       return simulateError(message);
     }
-  }
+  };
 
-  const handleDescription=(event)=>{
-    setDescription(event.target.value)
-  }
+  const handleDescription = (event) => {
+    setDescription(event.target.value);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -185,17 +185,17 @@ export default function ClientOrder() {
   if (data) {
     return (
       <>
-      {error && (
-        <Alert variant="filled" severity="error">
-          {error}
-        </Alert>
-      )}
+        {error && (
+          <Alert variant="filled" severity="error">
+            {error}
+          </Alert>
+        )}
 
-      {success && (
-        <Alert variant="filled" severity="success">
-          {success}
-        </Alert>
-      )}
+        {success && (
+          <Alert variant="filled" severity="success">
+            {success}
+          </Alert>
+        )}
         <DashboardLayout>
           <AppBar position="static">
             <Container maxWidth="xl">
@@ -310,7 +310,13 @@ export default function ClientOrder() {
                   <br />
                 </Typography>
                 {data.status === "completed" && (
-                  <Button variant="contained" style={{ color: "white" }} onClick={()=>handleOpen(data.agentId._id)}>Review</Button>
+                  <Button
+                    variant="contained"
+                    style={{ color: "white" }}
+                    onClick={() => handleOpen(data.agentId._id)}
+                  >
+                    Review
+                  </Button>
                 )}
               </CardContent>
             </Card>
@@ -334,9 +340,18 @@ export default function ClientOrder() {
                   }}
                 />
                 <br />
-                <TextField id="outlined-basic" label="Description" variant="outlined" value={description} onChange={handleDescription} />
-                <br /><br />
-                <Button variant="contained" style={{ color: "white" }} onClick={handleSubmit}>Submit</Button>
+                <TextField
+                  id="outlined-basic"
+                  label="Description"
+                  variant="outlined"
+                  value={description}
+                  onChange={handleDescription}
+                />
+                <br />
+                <br />
+                <Button variant="contained" style={{ color: "white" }} onClick={handleSubmit}>
+                  Submit
+                </Button>
               </Typography>
             </Box>
           </Modal>
