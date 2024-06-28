@@ -127,7 +127,7 @@ function Basic() {
         </Alert>
       )}
       <CoverLayout image={bgImage}>
-        <Card>
+        <Card style={{ width: "500px" }}>
           <MDBox
             variant="gradient"
             bgColor="info"

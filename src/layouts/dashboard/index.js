@@ -41,6 +41,8 @@ import "../../App.css";
 import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
 
+import Autocomplete from "@mui/material/Autocomplete";
+
 const pages = [
   { page: "Home", link: "dashboard" },
   { page: "Orders", link: "clientOrder" },
@@ -61,6 +63,15 @@ const style = {
   p: 4,
 };
 
+const top100Films = [
+  { label: "Facebook Ads" },
+  { label: "Instagram Ads" },
+  { label: "Google Ads" },
+  { label: "Email Marketing" },
+  { label: "Content Writing" },
+  { label: "SEO" },
+];
+
 function Dashboard() {
   const navigate = useNavigate();
   const { sales, tasks } = reportsLineChartData;
@@ -77,8 +88,10 @@ function Dashboard() {
   const [orderDescription, setOrderDescription] = useState(null);
   const [success, setSuccess] = useState(null);
   const [orderKPI, setOrderKPI] = useState(null);
+  const [skillName, setSkillName] = useState(null);
 
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = (agentId, price) => {
     setOpen(true);
     setAgentId(agentId);
@@ -89,6 +102,40 @@ function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/authentication/first-page");
+  };
+
+  const handleSkill = (value, newValue) => {
+    if (newValue) {
+      setSkillName(newValue.label);
+    } else {
+      setSkillName(null);
+    }
+  };
+  const handleSkill2 = async () => {
+    const token = localStorage.getItem("token");
+    console.log("token", token);
+    if (!token) {
+      navigate("/authentication/first-page");
+    }
+    try {
+      const response = await axios.get(`${APP_URL}/api/getAllAgents`, {
+        headers: {
+          "x-access-token": `${token}`,
+        },
+        params: {
+          skill: skillName,
+        },
+      });
+      if (response.data.data) {
+        setAgentData(response.data.data);
+        console.log(response.data.data);
+      }
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message ? error.response.data.message : error.message;
+
+      return simulateError(message);
+    }
   };
 
   const submitResult = async (event) => {
@@ -144,8 +191,8 @@ function Dashboard() {
       editable: true,
     },
     {
-      field: "delete",
-      headerName: "Delete",
+      field: "hire",
+      headerName: "Hire",
       headerAlign: "center",
       width: 100,
       renderCell: (params) => (
@@ -179,6 +226,10 @@ function Dashboard() {
       ))}
     </div>
   );
+
+  useEffect(() => {
+    handleSkill2();
+  }, [skillName]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -268,6 +319,7 @@ function Dashboard() {
     setSuccess(successMessage);
     setTimeout(() => {
       setSuccess(null);
+      setOpen(false);
     }, 3000);
   };
 
@@ -484,6 +536,16 @@ function Dashboard() {
               />
             </Grid>
           </MDBox>
+          <MDBox mt={4.5}></MDBox>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={top100Films}
+            sx={{ width: 300 }}
+            value={skillName}
+            onChange={handleSkill}
+            renderInput={(params) => <TextField {...params} label="Select Skill" />}
+          />
           <MDBox mt={4.5}></MDBox>
           <Box sx={{ height: 400, width: "100%" }}>
             <DataGrid

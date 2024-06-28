@@ -112,7 +112,7 @@ const routes = [
     component: <ClientOrder />,
   },
   {
-    type: "collapse",
+    type: "",
     name: "Profile",
     key: "profile",
     icon: <Icon fontSize="small">person</Icon>,

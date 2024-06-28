@@ -65,7 +65,7 @@ export default function AgentOrder() {
     {
       field: "description",
       headerName: "Description",
-      width: 110,
+      width: 450,
     },
     {
       field: "changeStatus",
