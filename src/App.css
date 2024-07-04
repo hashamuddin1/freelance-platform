@@ -5,3 +5,12 @@
 .btn{
    color: white !important; 
 }
+
+.appBar{
+  display: flex;
+  justify-content: space-between;
+}
+
+.bgColorSideNav{
+  background-color: white !important;
+}

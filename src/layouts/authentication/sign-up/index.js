@@ -159,7 +159,7 @@ function Cover() {
                   fullWidth
                 />
               </MDBox>
-              <MDBox display="flex" alignItems="center" ml={-1}>
+              {/* <MDBox display="flex" alignItems="center" ml={-1}>
                 <Checkbox />
                 <MDTypography
                   variant="button"
@@ -179,7 +179,7 @@ function Cover() {
                 >
                   Terms and Conditions
                 </MDTypography>
-              </MDBox>
+              </MDBox> */}
               <MDBox mt={4} mb={1}>
                 <MDButton onClick={submitResult} variant="gradient" color="info" fullWidth>
                   {isLoading ? <CircularProgress size={24} color="inherit" /> : "sign up"}

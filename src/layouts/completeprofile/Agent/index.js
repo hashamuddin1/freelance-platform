@@ -82,7 +82,7 @@ function Agent() {
           description: description,
           experience: experience,
           skills: selectedSkills,
-          price: price,
+          // price: price,
         },
         { headers: { "x-access-token": token } }
       );
@@ -178,16 +178,7 @@ function Agent() {
                   fullWidth
                 />
               </MDBox>
-              <MDBox mb={2}>
-                <MDInput
-                  type="text"
-                  value={price}
-                  onChange={handlePrice}
-                  label="Price"
-                  variant="standard"
-                  fullWidth
-                />
-              </MDBox>
+              <MDBox mb={2}></MDBox>
               <MDBox mb={2}>
                 <h6>Select Your Skills</h6>
                 <FormGroup>

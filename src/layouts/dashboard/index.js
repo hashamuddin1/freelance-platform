@@ -43,6 +43,10 @@ import { useNavigate } from "react-router-dom";
 
 import Autocomplete from "@mui/material/Autocomplete";
 
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
 const pages = [
   { page: "Home", link: "dashboard" },
   { page: "Orders", link: "clientOrder" },
@@ -88,7 +92,8 @@ function Dashboard() {
   const [orderDescription, setOrderDescription] = useState(null);
   const [success, setSuccess] = useState(null);
   const [orderKPI, setOrderKPI] = useState(null);
-  const [skillName, setSkillName] = useState(null);
+  const [skillName, setSkillName] = useState([]);
+  const [orderPrice, setOrderPrice] = useState(null);
 
   const [open, setOpen] = React.useState(false);
 
@@ -155,7 +160,7 @@ function Dashboard() {
           title: orderTitle,
           description: orderDescription,
           agentId: agentId,
-          price: agentPrice,
+          price: orderPrice,
         },
         { headers: { "x-access-token": token } }
       );
@@ -181,12 +186,6 @@ function Dashboard() {
     {
       field: "emailAddress",
       headerName: "Email Address",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "price",
-      headerName: "Price",
       width: 150,
       editable: true,
     },
@@ -327,8 +326,24 @@ function Dashboard() {
     setOrderTitle(event.target.value);
   };
 
+  const changeOrderPrice = (event) => {
+    setOrderPrice(event.target.value);
+  };
+
   const changeOrderDescription = (event) => {
     setOrderDescription(event.target.value);
+  };
+
+  const handleSkillChange = (event) => {
+    const { value, checked } = event.target;
+
+    if (checked) {
+      // Add the skill to the array
+      setSkillName((prevSkills) => [...prevSkills, value]);
+    } else {
+      // Remove the skill from the array
+      setSkillName((prevSkills) => prevSkills.filter((skill) => skill !== value));
+    }
   };
 
   if (isLoading) {
@@ -346,10 +361,9 @@ function Dashboard() {
 
   console.log({ agentData, data });
   if (agentData) {
-    rows = agentData.map(({ _id, fullName, emailAddress, price }) => ({
+    rows = agentData.map(({ _id, fullName, emailAddress }) => ({
       fullName,
       emailAddress,
-      price,
       id: _id,
     }));
   }
@@ -537,7 +551,7 @@ function Dashboard() {
             </Grid>
           </MDBox>
           <MDBox mt={4.5}></MDBox>
-          <Autocomplete
+          {/* <Autocomplete
             disablePortal
             id="combo-box-demo"
             options={top100Films}
@@ -545,6 +559,43 @@ function Dashboard() {
             value={skillName}
             onChange={handleSkill}
             renderInput={(params) => <TextField {...params} label="Select Skill" />}
+          /> */}
+          <h3>Select Skill</h3>
+          <FormControlLabel
+            control={<Checkbox />}
+            onChange={handleSkillChange}
+            value="Facebook Ads"
+            label="Facebook Ads"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            onChange={handleSkillChange}
+            value="Instagram Ads"
+            label="Instagram Ads"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            onChange={handleSkillChange}
+            value="Google Ads"
+            label="Google Ads"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            onChange={handleSkillChange}
+            value="Email Marketing"
+            label="Email Marketing"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            onChange={handleSkillChange}
+            value="Content Writing"
+            label="Content Writing"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            onChange={handleSkillChange}
+            value="SEO"
+            label="SEO"
           />
           <MDBox mt={4.5}></MDBox>
           <Box sx={{ height: 400, width: "100%" }}>
@@ -591,6 +642,16 @@ function Dashboard() {
                   variant="outlined"
                   value={orderDescription}
                   onChange={changeOrderDescription}
+                />
+              </div>
+              <div>
+                <TextField
+                  id="outlined-basic"
+                  label="Price"
+                  sx={{ marginBottom: 2 }}
+                  variant="outlined"
+                  value={orderPrice}
+                  onChange={changeOrderPrice}
                 />
               </div>
               <Button variant="contained" onClick={submitResult} className="btn">

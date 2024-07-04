@@ -34,6 +34,9 @@ import Alert from "@mui/material/Alert";
 import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
 
+//style
+import "../../App.css"
+
 const pages = [
   { page: "Profile", link: "agent-dashboard" },
   { page: "Orders", link: "agentOrder" },
@@ -246,7 +249,8 @@ function Dashboard() {
                     </Button>
                   </Menu>
                 </Box>
-                <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} className="appBar">
+                  <div>
                   {pages.map((page) => (
                     <MDTypography
                       component={Link}
@@ -260,6 +264,7 @@ function Dashboard() {
                       {page.page}
                     </MDTypography>
                   ))}
+                  </div>
                   <Button variant="contained" onClick={handleLogout} className="btn">
                     Logout
                   </Button>

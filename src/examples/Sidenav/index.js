@@ -15,6 +15,8 @@ Coded by www.creative-tim.com
 
 import { useEffect } from "react";
 
+import "../../App.css";
+
 // react-router-dom components
 import { useLocation, NavLink } from "react-router-dom";
 
@@ -131,7 +133,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           key={key}
           light={
             (!darkMode && !whiteSidenav && !transparentSidenav) ||
-            (darkMode && !transparentSidenav && whiteSidenav)
+            (!arkMode && !transparentSidenav && whiteSidenav)
           }
         />
       );
@@ -145,6 +147,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       {...rest}
       variant="permanent"
       ownerState={{ transparentSidenav, whiteSidenav, miniSidenav, darkMode }}
+      className="bgColorSideNav"
     >
       <MDBox pt={3} pb={1} px={4} textAlign="center">
         <MDBox
@@ -161,7 +164,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           </MDTypography>
         </MDBox>
         <MDBox component={NavLink} to="/" display="flex" alignItems="center">
-          {brand && <MDBox component="img" src={brand} alt="Brand" width="2rem" />}
+          <img src="./favicon.png" height={50} />
           <MDBox
             width={!brandName && "100%"}
             sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}

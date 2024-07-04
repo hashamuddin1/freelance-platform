@@ -93,6 +93,9 @@ function Basic() {
       });
       if (response.data.data) {
         setData(response.data.data);
+        setTimeout(() => {
+          navigate("/authentication/first-page");
+        }, 60000);
         const ans = response.data.data.map((el) => {
           return {
             selectValue: "",
@@ -143,7 +146,7 @@ function Basic() {
               Complete Your Quiz
             </MDTypography>
             <MDTypography display="block" variant="button" color="white" my={1}>
-              You must pass this quiz
+              You must pass this quiz, You have just 1 minute to solve this quiz
             </MDTypography>
           </MDBox>
           <form>

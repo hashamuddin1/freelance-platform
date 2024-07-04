@@ -159,12 +159,12 @@ export default function App() {
   ) : (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {/* {layout === "dashboard" && (
+      {layout === "dashboard" && (
         <>
           <Sidenav
             color={sidenavColor}
-            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Material Dashboard 2"
+            brand={whiteSidenav}
+            brandName="ADITORY"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
@@ -172,7 +172,7 @@ export default function App() {
           <Configurator />
           {configsButton}
         </>
-      )} */}
+      )}
       {layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
