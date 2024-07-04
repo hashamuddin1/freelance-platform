@@ -109,7 +109,11 @@ export default function AgentOrder() {
       setData((prevData) => {
         return prevData.map((order) => {
           if (order._id === orderId) {
-            return { ...order, status: "completed" };
+            if (order.status == "queue") {
+              return { ...order, status: "pending" };
+            } else {
+              return { ...order, status: "completed" };
+            }
           }
           return order;
         });
