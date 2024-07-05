@@ -155,7 +155,7 @@ function Configurator() {
       <Divider />
 
       <MDBox pt={0.5} pb={3} px={3}>
-        <MDBox>
+        {/* <MDBox>
           <MDTypography variant="h6">Sidenav Colors</MDTypography>
 
           <MDBox mb={0.5}>
@@ -199,7 +199,7 @@ function Configurator() {
               />
             ))}
           </MDBox>
-        </MDBox>
+        </MDBox> */}
 
         <MDBox mt={3} lineHeight={1}>
           <MDTypography variant="h6">Sidenav Type</MDTypography>
@@ -260,23 +260,7 @@ function Configurator() {
             </MDButton>
           </MDBox>
         </MDBox>
-        <MDBox
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt={3}
-          lineHeight={1}
-        >
-          <MDTypography variant="h6">Navbar Fixed</MDTypography>
-
-          <Switch checked={fixedNavbar} onChange={handleFixedNavbar} />
-        </MDBox>
         <Divider />
-        <MDBox display="flex" justifyContent="space-between" alignItems="center" lineHeight={1}>
-          <MDTypography variant="h6">Light / Dark</MDTypography>
-
-          <Switch checked={darkMode} onChange={handleDarkMode} />
-        </MDBox>
         <Divider />
       </MDBox>
     </ConfiguratorRoot>

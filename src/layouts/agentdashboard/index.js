@@ -35,7 +35,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
 
 //style
-import "../../App.css"
+import "../../App.css";
 
 const pages = [
   { page: "Profile", link: "agent-dashboard" },
@@ -251,19 +251,19 @@ function Dashboard() {
                 </Box>
                 <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} className="appBar">
                   <div>
-                  {pages.map((page) => (
-                    <MDTypography
-                      component={Link}
-                      to={`/${page.link}`}
-                      variant="button"
-                      color="black"
-                      key={page.page}
-                      fontWeight="medium"
-                      sx={{ marginRight: 5 }}
-                    >
-                      {page.page}
-                    </MDTypography>
-                  ))}
+                    {pages.map((page) => (
+                      <MDTypography
+                        component={Link}
+                        to={`/${page.link}`}
+                        variant="button"
+                        color="black"
+                        key={page.page}
+                        fontWeight="medium"
+                        sx={{ marginRight: 5 }}
+                      >
+                        {page.page}
+                      </MDTypography>
+                    ))}
                   </div>
                   <Button variant="contained" onClick={handleLogout} className="btn">
                     Logout
@@ -349,7 +349,7 @@ function Dashboard() {
                     readOnly: true,
                   }}
                 />
-                <TextField
+                {/* <TextField
                   style={{ marginRight: 10 }}
                   id="outlined-read-only-input"
                   label="Price"
@@ -357,7 +357,7 @@ function Dashboard() {
                   InputProps={{
                     readOnly: true,
                   }}
-                />
+                /> */}
               </Grid>
             </MDBox>
             <Box sx={{ height: 400, width: "100%" }}>

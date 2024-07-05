@@ -439,20 +439,22 @@ function Dashboard() {
                     ))}
                   </Menu>
                 </Box>
-                <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                  {pages.map((page) => (
-                    <MDTypography
-                      component={Link}
-                      to={`/${page.link}`}
-                      variant="button"
-                      color="black"
-                      key={page.page}
-                      fontWeight="medium"
-                      sx={{ marginRight: 5 }}
-                    >
-                      {page.page}
-                    </MDTypography>
-                  ))}
+                <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} className="appBar">
+                  <div>
+                    {pages.map((page) => (
+                      <MDTypography
+                        component={Link}
+                        to={`/${page.link}`}
+                        variant="button"
+                        color="black"
+                        key={page.page}
+                        fontWeight="medium"
+                        sx={{ marginRight: 5 }}
+                      >
+                        {page.page}
+                      </MDTypography>
+                    ))}
+                  </div>
                   <Button variant="contained" onClick={handleLogout} className="btn">
                     Logout
                   </Button>

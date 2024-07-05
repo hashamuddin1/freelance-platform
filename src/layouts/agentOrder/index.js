@@ -69,7 +69,7 @@ export default function AgentOrder() {
     },
     {
       field: "changeStatus",
-      headerName: "Change Status",
+      headerName: (params) => (params.row.status === "queue" ? "Accept" : "Change Status"),
       headerAlign: "center",
       width: 200,
       renderCell: (params) => (
@@ -81,7 +81,7 @@ export default function AgentOrder() {
           variant="contained"
           sx={{ backgroundColor: "orange", color: "white" }}
         >
-          Change Status
+          {params.row.status === "queue" ? "Accept" : "Change Status"}
         </Button>
       ),
     },
