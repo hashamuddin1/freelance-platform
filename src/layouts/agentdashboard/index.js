@@ -349,15 +349,6 @@ function Dashboard() {
                     readOnly: true,
                   }}
                 />
-                {/* <TextField
-                  style={{ marginRight: 10 }}
-                  id="outlined-read-only-input"
-                  label="Price"
-                  defaultValue={`$ ${data.price}`}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                /> */}
               </Grid>
             </MDBox>
             <Box sx={{ height: 400, width: "100%" }}>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -23,6 +23,9 @@ import TextField from "@mui/material/TextField";
 import { APP_URL } from "../../config";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
+
+import Cards from "react-credit-cards-2";
+import "react-credit-cards-2/dist/es/styles-compiled.css";
 
 const style = {
   position: "absolute",
@@ -68,6 +71,24 @@ export default function ClientCard() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const [state, setState] = useState({
+    number: "",
+    expiry: "",
+    cvc: "",
+    name: "",
+    focus: "",
+  });
+
+  const handleInputChange = (evt) => {
+    const { name, value } = evt.target;
+
+    setState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleInputFocus = (evt) => {
+    setState((prev) => ({ ...prev, focus: evt.target.name }));
   };
 
   const submitResult = async (event) => {
@@ -214,7 +235,12 @@ export default function ClientCard() {
             </Toolbar>
           </Container>
         </AppBar>
-        <Button onClick={handleOpen}>ADD CARD</Button>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Button onClick={handleOpen} style={{ backgroundColor: "blue", color: "white" }}>
+            ADD CARD
+          </Button>
+        </div>
+
         <Modal
           open={open}
           onClose={handleClose}
@@ -226,30 +252,81 @@ export default function ClientCard() {
               Add Card Detail
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                style={{ marginBottom: 10 }}
-                id="outlined-basic"
-                label="Card Number"
-                variant="outlined"
-              />
-              <TextField
-                style={{ marginBottom: 10 }}
-                id="outlined-basic"
-                label="Expiry Year"
-                variant="outlined"
-              />
-              <TextField
-                style={{ marginBottom: 10 }}
-                id="outlined-basic"
-                label="Expiry Month"
-                variant="outlined"
-              />
-              <TextField
-                style={{ marginBottom: 10 }}
-                id="outlined-basic"
-                label="Cvc"
-                variant="outlined"
-              />
+              <div>
+                <Cards
+                  number={state.number}
+                  expiry={state.expiry}
+                  cvc={state.cvc}
+                  name={state.name}
+                  focused={state.focus}
+                />
+                <form>
+                  <input
+                    type="text"
+                    name="number"
+                    placeholder="Card Number"
+                    value={state.number}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    maxLength={16}
+                    style={{
+                      width: "200px",
+                      marginBottom: "10px",
+                      marginTop: "10px",
+                      border: "2px solid black",
+                      height: "25px",
+                    }}
+                  />
+                  <input
+                    type="text"
+                    name="cvc"
+                    placeholder="Cvc"
+                    value={state.cvc}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    maxLength={3}
+                    style={{
+                      width: "200px",
+                      marginBottom: "10px",
+                      marginTop: "10px",
+                      border: "2px solid black",
+                      height: "25px",
+                    }}
+                  />
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    value={state.name}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    maxLength={12}
+                    style={{
+                      width: "200px",
+                      marginBottom: "10px",
+                      marginTop: "10px",
+                      border: "2px solid black",
+                      height: "25px",
+                    }}
+                  />
+                  <input
+                    type="text"
+                    name="expiry"
+                    placeholder="Exp Date"
+                    value={state.expiry}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    maxLength={4}
+                    style={{
+                      width: "200px",
+                      marginBottom: "10px",
+                      marginTop: "10px",
+                      border: "2px solid black",
+                      height: "25px",
+                    }}
+                  />
+                </form>
+              </div>
             </Typography>
             <Button variant="contained" onClick={submitResult} style={{ color: "white" }}>
               Save
