@@ -164,10 +164,8 @@ function Dashboard() {
         },
         { headers: { "x-access-token": token } }
       );
-      if (response.data.success === true) {
-        const checkToken = localStorage.getItem("token");
-        return showSuccessModal("Order Created Successfully");
-      }
+      console.log(55);
+      return showSuccessModal("Order Created Successfully");
     } catch (error) {
       const message =
         error.response && error.response.data.message ? error.response.data.message : error.message;
@@ -378,17 +376,17 @@ function Dashboard() {
   if (data && orderKPI && agentData) {
     return (
       <>
-        {error && (
-          <Alert variant="filled" severity="error">
-            {error}
-          </Alert>
-        )}
-        {success && (
-          <Alert variant="filled" severity="success">
-            {success}
-          </Alert>
-        )}
         <DashboardLayout>
+          {error && (
+            <Alert variant="filled" severity="error">
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert variant="filled" severity="success">
+              {success}
+            </Alert>
+          )}
           <AppBar position="static">
             <Container maxWidth="xl">
               <Toolbar disableGutters>
@@ -551,15 +549,6 @@ function Dashboard() {
             </Grid>
           </MDBox>
           <MDBox mt={4.5}></MDBox>
-          {/* <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={top100Films}
-            sx={{ width: 300 }}
-            value={skillName}
-            onChange={handleSkill}
-            renderInput={(params) => <TextField {...params} label="Select Skill" />}
-          /> */}
           <h3>Select Skill</h3>
           <FormControlLabel
             control={<Checkbox />}

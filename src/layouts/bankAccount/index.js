@@ -160,17 +160,17 @@ export default function BankAccount() {
   if (data) {
     return (
       <>
-        {error && (
-          <Alert variant="filled" severity="error">
-            {error}
-          </Alert>
-        )}
-        {success && (
-          <Alert variant="filled" severity="success">
-            {success}
-          </Alert>
-        )}
         <DashboardLayout>
+          {error && (
+            <Alert variant="filled" severity="error">
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert variant="filled" severity="success">
+              {success}
+            </Alert>
+          )}
           <AppBar position="static">
             <Container maxWidth="xl">
               <Toolbar disableGutters>
