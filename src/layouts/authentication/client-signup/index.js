@@ -183,8 +183,8 @@ function Cover() {
                   Terms and Conditions
                 </MDTypography>
               </MDBox> */}
-              <MDBox mt={4} mb={1}>
-                <MDButton onClick={submitResult} variant="gradient" color="info" fullWidth>
+              <MDBox mt={4} mb={1} onClick={submitResult}>
+                <MDButton variant="gradient" color="info" fullWidth>
                   {isLoading ? <CircularProgress size={24} color="inherit" /> : "sign up"}
                 </MDButton>
               </MDBox>
