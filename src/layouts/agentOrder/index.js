@@ -361,6 +361,7 @@ export default function AgentOrder() {
               </MDBox>
             </Grid>
           </Grid>
+          <h3 style={{ marginBottom: "15px", marginTop: "15px" }}>All Orders</h3>
           <Box sx={{ height: 400, width: "100%" }}>
             <DataGrid
               rows={rows}
