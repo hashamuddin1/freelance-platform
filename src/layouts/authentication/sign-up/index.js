@@ -28,7 +28,6 @@ function Cover() {
   const navigate = useNavigate();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -56,10 +55,6 @@ function Cover() {
       if (emailAddress === "" || password === "" || fullName === "") {
         setIsLoading(false);
         return simulateError("First Fill All The Fields");
-      }
-      if (password != confirmPassword) {
-        setIsLoading(false);
-        return simulateError("Password and Confirm password must be same");
       }
       console.log(APP_URL);
       const response = await axios.post(`${APP_URL}/api/userSignUp`, {
@@ -168,37 +163,6 @@ function Cover() {
                   fullWidth
                 />
               </MDBox>
-              <MDBox mb={2}>
-                <MDInput
-                  type="password"
-                  value={confirmPassword}
-                  onChange={changeConfirmPassword}
-                  label="Password"
-                  variant="standard"
-                  fullWidth
-                />
-              </MDBox>
-              {/* <MDBox display="flex" alignItems="center" ml={-1}>
-                <Checkbox />
-                <MDTypography
-                  variant="button"
-                  fontWeight="regular"
-                  color="text"
-                  sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-                >
-                  &nbsp;&nbsp;I agree the&nbsp;
-                </MDTypography>
-                <MDTypography
-                  component="a"
-                  href="#"
-                  variant="button"
-                  fontWeight="bold"
-                  color="info"
-                  textGradient
-                >
-                  Terms and Conditions
-                </MDTypography>
-              </MDBox> */}
               <MDBox onClick={submitResult} mt={4} mb={1}>
                 <MDButton onClick={submitResult} variant="gradient" color="info" fullWidth>
                   {isLoading ? <CircularProgress size={24} color="inherit" /> : "sign up"}
